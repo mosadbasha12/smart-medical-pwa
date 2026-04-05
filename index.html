@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f4c81" />
+    <meta name="description" content="نظام ذكي لحجز المواعيد الطبية وإدارة الملف الطبي والاستشارة الأولية" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="Smart Medical" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./assets/icons/icon-180.png" />
+    <link rel="stylesheet" href="./src/styles.css" />
+    <title>Smart Medical System</title>
+  </head>
+  <body>
+    <div id="app-shell" class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Graduation Project</p>
+          <h1>Smart Medical System</h1>
+          <p class="subtitle">حجز مواعيد، ملف طبي رقمي، واستشارة أولية سريعة</p>
+        </div>
+        <button id="install-btn" class="ghost-btn hidden">تثبيت التطبيق</button>
+      </header>
+
+      <main class="main-content">
+        <section id="auth-view" class="view active">
+          <div class="card hero-card">
+            <h2>تسجيل الدخول</h2>
+            <p>ادخلي بحساب المريض أو استخدمي وضع العرض التقديمي بدون سيرفر.</p>
+            <div class="grid two-col">
+              <label>
+                <span>اسم المستخدم</span>
+                <input id="login-username" type="text" placeholder="patient_demo" value="patient_demo" />
+              </label>
+              <label>
+                <span>كلمة المرور</span>
+                <input id="login-password" type="password" placeholder="Patient123!" value="Patient123!" />
+              </label>
+            </div>
+            <div class="actions-row">
+              <button id="login-btn" class="primary-btn">دخول</button>
+              <button id="demo-btn" class="secondary-btn">تشغيل وضع العرض</button>
+            </div>
+            <div class="status-box" id="auth-status">جاهز للاتصال بالسيرفر أو العمل التجريبي.</div>
+          </div>
+
+          <div class="card">
+            <h3>إنشاء حساب جديد</h3>
+            <div class="grid two-col">
+              <label><span>اسم المستخدم</span><input id="reg-username" type="text" /></label>
+              <label><span>كلمة المرور</span><input id="reg-password" type="password" /></label>
+              <label><span>الاسم الأول</span><input id="reg-firstname" type="text" /></label>
+              <label><span>الاسم الأخير</span><input id="reg-lastname" type="text" /></label>
+              <label><span>البريد الإلكتروني</span><input id="reg-email" type="email" /></label>
+              <label><span>رقم الهاتف</span><input id="reg-phone" type="tel" /></label>
+              <label><span>النوع</span><input id="reg-gender" type="text" /></label>
+              <label><span>العمر</span><input id="reg-age" type="number" value="22" /></label>
+              <label><span>فصيلة الدم</span><input id="reg-blood" type="text" /></label>
+              <label class="full-width"><span>العنوان</span><textarea id="reg-address"></textarea></label>
+            </div>
+            <div class="actions-row">
+              <button id="register-btn" class="primary-btn">إنشاء الحساب</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="app-view" class="view">
+          <div class="card welcome-card">
+            <div>
+              <p class="eyebrow">مرحبًا</p>
+              <h2 id="welcome-name">المستخدم</h2>
+              <p id="welcome-summary">جارٍ تحميل البيانات...</p>
+            </div>
+            <div class="pill-group">
+              <span id="connection-pill" class="pill">سيرفر غير محدد</span>
+              <span id="mode-pill" class="pill success">متصل</span>
+            </div>
+          </div>
+
+          <nav class="tabbar" id="tabbar">
+            <button class="tab active" data-tab="home">الرئيسية</button>
+            <button class="tab" data-tab="doctors">الأطباء</button>
+            <button class="tab" data-tab="appointments">المواعيد</button>
+            <button class="tab" data-tab="medical">الملف الطبي</button>
+            <button class="tab" data-tab="chatbot">الاستشارة</button>
+            <button class="tab" data-tab="profile">الحساب</button>
+          </nav>
+
+          <section class="tab-panel active" id="tab-home">
+            <div class="grid stats-grid">
+              <div class="metric-card">
+                <span>الأطباء</span>
+                <strong id="metric-doctors">0</strong>
+              </div>
+              <div class="metric-card">
+                <span>المواعيد القادمة</span>
+                <strong id="metric-upcoming">0</strong>
+              </div>
+              <div class="metric-card">
+                <span>السجلات الطبية</span>
+                <strong id="metric-visits">0</strong>
+              </div>
+              <div class="metric-card">
+                <span>المستندات</span>
+                <strong id="metric-docs">0</strong>
+              </div>
+            </div>
+            <div class="card" id="next-appointment-card">
+              <h3>أقرب موعد</h3>
+              <div id="next-appointment-content" class="empty-hint">لا يوجد موعد محجوز حاليًا.</div>
+            </div>
+            <div class="card">
+              <h3>إجراءات سريعة</h3>
+              <div class="actions-row wrap">
+                <button class="secondary-btn jump-btn" data-jump="doctors">حجز موعد</button>
+                <button class="secondary-btn jump-btn" data-jump="medical">فتح الملف الطبي</button>
+                <button class="secondary-btn jump-btn" data-jump="chatbot">استشارة سريعة</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="tab-doctors">
+            <div class="card">
+              <div class="section-head">
+                <h3>الأطباء</h3>
+                <button id="refresh-doctors-btn" class="ghost-btn">تحديث</button>
+              </div>
+              <div id="doctors-list" class="list-stack"></div>
+            </div>
+            <div class="card">
+              <div class="section-head">
+                <h3>المواعيد المتاحة</h3>
+                <div class="inline-form">
+                  <select id="slot-filter-doctor"></select>
+                  <button id="refresh-slots-btn" class="ghost-btn">عرض</button>
+                </div>
+              </div>
+              <div id="slots-list" class="list-stack"></div>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="tab-appointments">
+            <div class="card">
+              <div class="section-head">
+                <h3>مواعيدي</h3>
+                <button id="refresh-appointments-btn" class="ghost-btn">تحديث</button>
+              </div>
+              <div id="appointments-list" class="list-stack"></div>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="tab-medical">
+            <div class="card">
+              <div class="section-head">
+                <h3>الملف الطبي</h3>
+                <button id="refresh-medical-btn" class="ghost-btn">تحديث</button>
+              </div>
+              <div id="medical-summary" class="list-stack"></div>
+            </div>
+            <div class="card">
+              <h3>سجل الزيارات</h3>
+              <div id="visits-list" class="list-stack"></div>
+            </div>
+            <div class="card">
+              <h3>الأشعة والتقارير</h3>
+              <div id="documents-list" class="list-stack"></div>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="tab-chatbot">
+            <div class="card">
+              <h3>Chatbot للاستشارة الأولية</h3>
+              <p class="muted">هذه النتيجة إرشادية فقط وليست تشخيصًا نهائيًا.</p>
+              <label>
+                <span>اكتبي الأعراض أو السؤال</span>
+                <textarea id="chatbot-message" rows="5">I have fever and cough for two days</textarea>
+              </label>
+              <div class="actions-row">
+                <button id="chatbot-send-btn" class="primary-btn">تحليل الحالة</button>
+              </div>
+            </div>
+            <div class="card" id="chatbot-result-card">
+              <h3>النتيجة</h3>
+              <div id="chatbot-result" class="empty-hint">لم يتم التحليل بعد.</div>
+            </div>
+          </section>
+
+          <section class="tab-panel" id="tab-profile">
+            <div class="card">
+              <h3>بيانات الحساب</h3>
+              <div id="profile-data" class="list-stack"></div>
+            </div>
+            <div class="card">
+              <h3>إعدادات السيرفر</h3>
+              <label>
+                <span>رابط الـ Backend</span>
+                <input id="api-base-url" type="text" placeholder="http://192.168.1.10:8000/api" />
+              </label>
+              <p class="muted">إذا أدخلتِ الرابط بدون /api سيضيفه التطبيق تلقائيًا.</p>
+              <div class="actions-row wrap">
+                <button id="save-url-btn" class="primary-btn">حفظ الرابط</button>
+                <button id="reset-url-btn" class="secondary-btn">إعادة الافتراضي</button>
+                <button id="reload-all-btn" class="secondary-btn">تحديث البيانات</button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>الجلسة</h3>
+              <div class="actions-row wrap">
+                <button id="signout-btn" class="danger-btn">تسجيل الخروج</button>
+              </div>
+            </div>
+          </section>
+        </section>
+      </main>
+
+      <div id="toast" class="toast hidden"></div>
+    </div>
+
+    <script src="./src/app.js" defer></script>
+  </body>
+</html>

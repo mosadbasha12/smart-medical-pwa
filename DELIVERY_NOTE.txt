@@ -1,0 +1,22 @@
+DELIVERABLE: Installable PWA package for Android and iPhone.
+
+This package is designed to be deployed as a static website over HTTPS, then installed to the home screen on Android (Chrome) and iPhone (Safari).
+
+Files:
+- index.html
+- src/app.js
+- src/styles.css
+- manifest.webmanifest
+- service-worker.js
+- assets/icons/*
+- README_AR.md
+
+Includes:
+- Login / Register
+- Doctors list
+- Available slots
+- Appointment booking and cancellation
+- Digital medical file view
+- Chatbot triage
+- Profile and server settings
+- Demo mode for offline presentation
